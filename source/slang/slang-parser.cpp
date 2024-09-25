@@ -4873,14 +4873,41 @@ namespace Slang
 
     static bool parseGLSLGlobalDecl(Parser* parser, ContainerDecl* containerDecl)
     {
-        SLANG_UNUSED(containerDecl);
-
         if (AdvanceIf(parser, "precision"))
         {
             // skip global precision declarations.
-            parser->ReadToken();
-            parser->ReadToken();
-            parser->ReadToken(TokenType::Semicolon);
+            auto loc = parser->tokenReader.peekToken();
+            auto precision = parser->ReadToken();
+        
+            if(precision.hasContent())
+            {
+                auto content = precision.getContent();
+                auto decl = parser->astBuilder->create<GLSLPrecisionDecl>();
+                
+                if(content.caseInsensitiveEquals(UnownedStringSlice::fromLiteral("high")))
+                {
+                    decl->precision = 0;
+                }
+                else if(content.caseInsensitiveEquals(UnownedStringSlice::fromLiteral("medium")))
+                {
+                    decl->precision = 1;
+                }
+                else if(content.caseInsensitiveEquals(UnownedStringSlice::fromLiteral("low")))
+                {
+                    decl->precision = 2;
+                }
+                else
+                {
+                    parser->diagnose(loc, Diagnostics::syntaxError);
+                }    
+
+                decl->type = parser->ParseTypeExp();
+                
+                parser->ReadToken(TokenType::Semicolon);
+                
+                containerDecl->addMember(decl);
+            }
+        
             return true;
         }
         return false;
@@ -4894,12 +4921,10 @@ namespace Slang
         Token closingBraceToken;
         while (!AdvanceIfMatch(parser, matchType, &closingBraceToken))
         {
-            if (parser->options.allowGLSLInput)
-            {
-                if (parseGLSLGlobalDecl(parser, containerDecl))
-                    continue;
-            }
-            ParseDecl(parser, containerDecl);
+			if (parseGLSLGlobalDecl(parser, containerDecl))
+				continue;
+
+			ParseDecl(parser, containerDecl);
         }
         containerDecl->closingSourceLoc = closingBraceToken.loc;
     }

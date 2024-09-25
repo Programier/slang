@@ -674,6 +674,14 @@ class BackwardDerivativeRequirementDecl : public DerivativeRequirementDecl
     SLANG_AST_CLASS(BackwardDerivativeRequirementDecl)
 };
 
+class GLSLPrecisionDecl : public Decl
+{
+    SLANG_AST_CLASS(GLSLPrecisionDecl)
+    
+    TypeExp type;
+    int precision = 0;
+};
+
 bool isInterfaceRequirement(Decl* decl);
 InterfaceDecl* findParentInterfaceDecl(Decl* decl);
 

@@ -1677,6 +1677,19 @@ bool GLSLSourceEmitter::_tryEmitBitBinOp(IRInst* inst, const EmitOpInfo& bitOp, 
 
 }
 
+void GLSLSourceEmitter::emitPrecision(IRInst* inst)
+{
+    if(auto precision = as<IRGLSLPrecisionStmt>(inst))
+    {
+        m_writer->emit("precision ");
+        auto level = precision->getPrecision()->getValue();
+        const char* levels[] = {"highp ", "mediump ", "lowp "};
+        m_writer->emit(levels[level]);
+        emitSimpleType(precision->getType());
+        m_writer->emit(";\n");
+    }
+}
+
 void GLSLSourceEmitter::emitBufferPointerTypeDefinition(IRInst* ptrType)
 {
     _requireGLSLExtension(UnownedStringSlice("GL_EXT_buffer_reference"));
@@ -1722,6 +1735,9 @@ void GLSLSourceEmitter::emitGlobalInstImpl(IRInst* inst)
     {
     case kIROp_HLSLConstBufferPointerType:
         emitBufferPointerTypeDefinition(inst);
+        break;
+    case kIROp_GLSLPrecisionStmt:
+        emitPrecision(inst);
         break;
     // No need to use structs which are just taking part in a SSBO declaration
     case kIROp_StructType:

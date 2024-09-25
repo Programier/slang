@@ -1854,7 +1854,7 @@ LinkedIR linkIR(
             // We need to copy over exported symbols,
             // and any global parameters if preserve-params option is set.
             if (_isHLSLExported(inst) ||
-                shouldCopyGlobalParams && as<IRGlobalParam>(inst))
+                shouldCopyGlobalParams && as<IRGlobalParam>(inst) || as<IRGLSLPrecisionStmt>(inst))
             {
                 auto cloned = cloneValue(context, inst);
                 if (!cloned->findDecorationImpl(kIROp_KeepAliveDecoration))

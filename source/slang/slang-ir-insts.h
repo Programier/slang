@@ -3403,6 +3403,14 @@ struct IREmbeddedDownstreamIR : IRInst
     IRBlobLit* getBlob() { return cast<IRBlobLit>(getOperand(1)); }
 };
 
+struct IRGLSLPrecisionStmt : IRInst
+{
+    IR_LEAF_ISA(GLSLPrecisionStmt)
+    
+    IRIntLit* getPrecision() { return cast<IRIntLit>(getOperand(0)); }
+    IRType* getType() { return cast<IRType>(getOperand(1)); }
+};
+
 struct IRBuilderSourceLocRAII;
 
 struct IRBuilder
@@ -4562,7 +4570,8 @@ public:
     IRMetalSetVertex* emitMetalSetVertex(IRInst* index, IRInst* vertex);
     IRMetalSetPrimitive* emitMetalSetPrimitive(IRInst* index, IRInst* primitive);
     IRMetalSetIndices* emitMetalSetIndices(IRInst* index, IRInst* indices);
-
+    
+    IRGLSLPrecisionStmt* emitGLSLPrecisionStmt(int level, IRType* type);
     //
     // Decorations
     //

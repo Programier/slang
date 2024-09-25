@@ -5567,6 +5567,13 @@ namespace Slang
         addInst(inst);
         return inst;
     }
+    
+    IRGLSLPrecisionStmt* IRBuilder::emitGLSLPrecisionStmt(int level, IRType* type)
+    {
+        auto inst = createInst<IRGLSLPrecisionStmt>(this, kIROp_GLSLPrecisionStmt, getVoidType(), getIntValue(getIntType(), level), type);
+        addInst(inst);
+        return inst;
+    }
 
     IRInst* IRBuilder::emitSwizzleSet(
         IRType*         type,

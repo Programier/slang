@@ -129,6 +129,8 @@ namespace Slang
         void checkCallableDeclCommon(CallableDecl* decl);
 
         void visitFuncDecl(FuncDecl* funcDecl);
+        
+        void visitGLSLPrecisionDecl(GLSLPrecisionDecl* glslPrecisionDecl);
 
         void visitParamDecl(ParamDecl* paramDecl);
 
@@ -8686,6 +8688,20 @@ namespace Slang
         funcDecl->returnType = resultType;
 
         checkCallableDeclCommon(funcDecl);
+    }
+    
+    void SemanticsDeclHeaderVisitor::visitGLSLPrecisionDecl(GLSLPrecisionDecl* glslPrecisionDecl)
+    {
+        auto type = glslPrecisionDecl->type;
+        if(type.exp)
+        {
+            type = CheckProperType(type);
+        }
+        else if (!type.type)
+        {
+            type = TypeExp(m_astBuilder->getVoidType());
+        }
+        glslPrecisionDecl->type = type;
     }
 
     IntegerLiteralValue SemanticsVisitor::GetMinBound(IntVal* val)

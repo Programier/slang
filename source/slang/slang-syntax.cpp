@@ -98,6 +98,7 @@ void printDiagnosticArg(StringBuilder& sb, ASTNodeType nodeType)
         case ASTNodeType::SyntaxDecl: sb << "syntax"; break;
         case ASTNodeType::DeclGroup: sb << "decl-group"; break;
         case ASTNodeType::RequireCapabilityDecl: sb << "__require_capability"; break;
+        case ASTNodeType::GLSLPrecisionDecl: sb << "precision"; break; 
         default: sb << "decl"; break;
     }
 }

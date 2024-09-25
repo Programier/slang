@@ -10479,6 +10479,19 @@ struct DeclLoweringVisitor : DeclVisitor<DeclLoweringVisitor, LoweredValInfo>
         }
         return result;
     }
+    
+    LoweredValInfo visitGLSLPrecisionDecl(GLSLPrecisionDecl* decl)
+    {        
+		NestedContext nested(this);
+
+		auto builder = nested.getBuilder();
+		auto context = nested.getContext();
+
+		auto irType = lowerType(context, decl->type.type);
+
+		auto inst = builder->emitGLSLPrecisionStmt(decl->precision, irType);
+		return LoweredValInfo::simple(inst);
+	}
 };
 
 LoweredValInfo lowerDecl(

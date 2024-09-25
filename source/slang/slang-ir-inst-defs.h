@@ -1324,7 +1324,7 @@ INST(SPIRVAsmInst, SPIRVAsmInst, 1, 0)
     INST(SPIRVAsmOperandSampledImageType, __sampledImageType, 1, HOISTABLE)
 
 INST_RANGE(SPIRVAsmOperand, SPIRVAsmOperandLiteral, SPIRVAsmOperandSampledImageType)
-
+INST(GLSLPrecisionStmt, GLSLPrecisionStmt, 2, GLOBAL)
 
 #undef PARENT
 #undef USE_OTHER

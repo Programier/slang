@@ -4479,7 +4479,16 @@ void CLikeSourceEmitter::computeEmitActions(IRModule* module, List<EmitAction>& 
     ctx.moduleInst = module->getModuleInst();
     ctx.actions = &ioActions;
     ctx.openInsts = InstHashSet(module);
-
+    
+    if (getTarget() == CodeGenTarget::GLSL || getTarget() == CodeGenTarget::SPIRV)
+    {
+        for(auto inst : module->getGlobalInsts())
+        {
+            if (as<IRGLSLPrecisionStmt>(inst))
+                ensureGlobalInst(&ctx, inst, EmitAction::Level::Definition);
+        }   
+    }        
+    
     for(auto inst : module->getGlobalInsts())
     {
         // Emit all resource-typed objects first. This is to avoid an odd scenario in HLSL
